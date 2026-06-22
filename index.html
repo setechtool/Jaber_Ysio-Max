@@ -656,7 +656,7 @@
                     </div>
                     <div class="stat-card">
                         <div class="card-header">
-                            <h3>⏱️ Daily Average</h3>
+                            <h3>⏱️ Average Daily Exposure</h3>
                             <span class="pill">per room</span>
                         </div>
                         <div class="daily-avg-list" id="dailyAvgListNested"></div>
@@ -959,7 +959,7 @@
                 { label: 'Total Exposure', value: fmt(totalExposure) },
                 { label: 'Busiest Room', value: busiest.room + ' (' + fmt(busiest.exposure) + ')' },
                 { label: 'Quietest Room', value: quietest.room + ' (' + fmt(quietest.exposure) + ')' },
-                { label: 'Avg Daily Exposure', value: fmt(Math.round(overallAvg)) },
+                { label: 'Average Daily Exposure for 8 x-ray rooms', value: fmt(Math.round(overallAvg)) },
             ];
             const grid = document.getElementById('kpiGrid');
             grid.innerHTML = kpis.map(k => `
