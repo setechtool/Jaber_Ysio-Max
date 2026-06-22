@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Al Jaber Hospital Ysio Max Systems · Usage Analytics</title>
+    <title>Ysio Max · Usage Analytics</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js">
@@ -122,33 +122,54 @@
         .btn-load:hover {
             background: #5f462e;
         }
-        .btn-edit {
-            background: #7a4a6a;
-            box-shadow: none;
-        }
-        .btn-edit:hover {
-            background: #5f3a52;
-        }
-        .btn-config {
-            background: #4a5a7a;
-            box-shadow: none;
-        }
-        .btn-config:hover {
-            background: #35455f;
-        }
-        .btn-test {
-            background: #2a6b7a;
-            box-shadow: none;
-        }
-        .btn-test:hover {
-            background: #1a4a5a;
-        }
         .btn-export {
             background: #6a4a7a;
             box-shadow: none;
         }
         .btn-export:hover {
             background: #4a3a5a;
+        }
+
+        /* Dropdown menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            min-width: 200px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(26, 58, 92, 0.08);
+            z-index: 100;
+            padding: 6px 0;
+            margin-top: 6px;
+        }
+        .dropdown-content.active {
+            display: block;
+        }
+        .dropdown-content .dropdown-item {
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1a2639;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dropdown-content .dropdown-item:hover {
+            background: #eef3f9;
+        }
+        .dropdown-content .dropdown-item .icon {
+            font-size: 16px;
+            width: 24px;
+            text-align: center;
         }
 
         .kpi-grid {
@@ -262,17 +283,19 @@
         .daily-avg-list {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
             flex: 1;
+            overflow-y: auto;
+            max-height: 275px;
         }
         .ranking-item,
         .daily-avg-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 14px;
+            padding: 6px 12px;
             background: white;
-            border-radius: 8px;
-            font-size: 13px;
+            border-radius: 6px;
+            font-size: 12px;
             font-weight: 500;
             border: 1px solid rgba(26, 58, 92, 0.04);
             line-height: 1.4;
@@ -280,7 +303,7 @@
         .ranking-item .pos,
         .daily-avg-item .pos {
             color: #6b7f96;
-            margin-right: 12px;
+            margin-right: 10px;
         }
         .ranking-item .name,
         .daily-avg-item .name {
@@ -296,6 +319,7 @@
             border-left: 4px solid #3b82f6;
         }
 
+        /* Right panel: recommendations + technical section */
         .recommendation-box {
             background: #f0f7ff;
             border-radius: 12px;
@@ -309,6 +333,80 @@
         }
         .recommendation-box strong {
             color: #0b2a4a;
+        }
+        .recommendation-box .section-title {
+            font-weight: 700;
+            color: #0b2a4a;
+            margin-top: 10px;
+            display: block;
+        }
+        .recommendation-box .section-title:first-of-type {
+            margin-top: 0;
+        }
+        .tech-section {
+            margin-top: 16px;
+            border-top: 1px solid rgba(26, 58, 92, 0.1);
+            padding-top: 16px;
+            display: none;
+        }
+        .tech-section.visible {
+            display: block;
+        }
+        .tech-section .tech-details-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .tech-section .tech-room-item {
+            background: white;
+            border-radius: 8px;
+            padding: 8px 12px;
+            border: 1px solid rgba(26, 58, 92, 0.06);
+            font-size: 12px;
+        }
+        .tech-section .tech-room-item .tech-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            color: #0b2a4a;
+            margin-bottom: 3px;
+        }
+        .tech-section .tech-room-item .tech-header .serial {
+            font-weight: 400;
+            color: #6b7f96;
+            font-size: 11px;
+        }
+        .tech-section .tech-room-item .tech-header .total {
+            font-weight: 700;
+            color: #1a4b7a;
+        }
+        .tech-section .tech-room-item .tech-tubes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            font-size: 11px;
+            color: #4b5e77;
+        }
+        .tech-section .tech-room-item .tech-tubes .tube-entry {
+            background: #eef3f9;
+            padding: 1px 8px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+        .tech-section .tech-room-item .tech-tubes .tube-entry .count {
+            font-weight: 600;
+            color: #0b2a4a;
+        }
+        .tech-section .tech-room-item .tech-tubes .tube-entry .replacement {
+            font-size: 10px;
+            color: #6b7f96;
+        }
+        .tech-section .tech-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #0b2a4a;
+            margin-bottom: 6px;
         }
 
         #fileInput {
@@ -543,6 +641,11 @@
                 padding: 16px;
             }
         }
+        @media (max-width: 768px) {
+            .nested-bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
         @media (max-width: 600px) {
             .dashboard-header {
                 flex-direction: column;
@@ -581,6 +684,10 @@
                 max-height: 95vh;
                 padding: 12px;
             }
+            .dropdown-content {
+                right: -10px;
+                min-width: 180px;
+            }
         }
         .chart-wrapper canvas {
             width: 100% !important;
@@ -618,7 +725,7 @@
     <div id="dashboard" style="display:none;">
         <header class="dashboard-header">
             <div class="header-left">
-                <h1>📊 Al Jaber Hospital Ysio Max Systems · Usage Analytics</h1>
+                <h1>📊 Ysio Max · Usage Analytics</h1>
                 <div class="sub">
                     <span id="roomCount">0</span> rooms · exposure = sum of tube counts · daily averages
                     <span style="margin-left:12px;font-weight:400;color:#6b7f96;" id="dataSourceLabel">(data.json)</span>
@@ -626,10 +733,23 @@
             </div>
             <div class="header-right">
                 <div class="badge-date">📅 <span id="dateDisplay"></span></div>
-                <button class="btn btn-config" id="configBtn">🔑 Token Settings</button>
+                <!-- Settings Dropdown -->
+                <div class="dropdown" id="settingsDropdown">
+                    <button class="btn" id="settingsBtn">⚙️ Settings</button>
+                    <div class="dropdown-content" id="dropdownMenu">
+                        <div class="dropdown-item" data-action="token">
+                            <span class="icon">🔑</span> Token Settings
+                        </div>
+                        <div class="dropdown-item" data-action="edit">
+                            <span class="icon">✏️</span> Edit Data
+                        </div>
+                        <div class="dropdown-item" data-action="tech">
+                            <span class="icon">🔧</span> Technical Recommendations
+                        </div>
+                    </div>
+                </div>
                 <button class="btn btn-load" id="loadBtn">📂 Load</button>
                 <button class="btn btn-save" id="saveBtn">💾 Save</button>
-                <button class="btn btn-edit" id="editBtn">✏️ Edit Data</button>
                 <button class="btn btn-export" id="exportBtn">🖼️ Export PNG</button>
             </div>
         </header>
@@ -664,20 +784,28 @@
                 </div>
             </div>
 
+            <!-- Right column: Recommendations + Technical Section -->
             <div class="card">
                 <div class="card-header">
                     <h3>💡 Recommendations</h3>
                     <span class="pill">insights</span>
                 </div>
                 <div class="recommendation-box" id="recommendationBox">
-                    Loading…
+                    <!-- Management recommendations will be injected here -->
+                    <div id="managementRecommendations"></div>
+                    <!-- Technical section (hidden by default) -->
+                    <div class="tech-section" id="techSection">
+                        <div class="tech-title">🔧 Technical Details & Recommendations</div>
+                        <div id="techRecommendationsText" style="margin-bottom:10px;"></div>
+                        <div class="tech-details-list" id="techDetailsList"></div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div style="margin-top: 20px; font-size: 13px; color: #6b7f96; text-align: center; border-top: 1px solid rgba(26,58,92,0.06); padding-top: 16px;">
             Siemens Ysio Max · Data as of <span id="footerDate"></span> · Exposure = sum of tube counts.
-            <br>Use <strong>Load</strong> to open a saved JSON file, <strong>Save</strong> to commit to GitHub (updates data.json + creates timestamped backup), and <strong>Edit Data</strong> to modify room and tube details.
+            <br>Use <strong>Load</strong> to open a saved JSON file, <strong>Save</strong> to commit to GitHub (updates data.json + creates timestamped backup).
         </div>
     </div>
 
@@ -760,6 +888,13 @@
         function dailyAverage(exposure, startDateStr) {
             const days = daysBetween(startDateStr);
             return exposure / days;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
         }
 
         // ─── LOAD DEFAULT DATA ──────────────────────────────────
@@ -927,24 +1062,81 @@
               `).join('');
         }
 
-        function renderRecommendations() {
+        function renderTechDetails() {
+            const list = document.getElementById('techDetailsList');
+            const sorted = [...data].sort((a, b) => totalTubeCount(b) - totalTubeCount(a));
+
+            list.innerHTML = sorted.map(room => {
+                const total = totalTubeCount(room);
+                const tubesHtml = room.tubes.map((t, i) => {
+                    const isCurrent = i === room.tubes.length - 1 && t.replacementDate === '';
+                    const label = isCurrent ? 'Current' : `#${i+1}`;
+                    const dateStr = t.replacementDate ? formatDate(t.replacementDate) : 'N/A';
+                    return `<span class="tube-entry">
+                        <span class="count">${fmt(t.tubeCount)}</span>
+                        ${isCurrent ? '🟢' : '📅'} 
+                        <span class="replacement">${isCurrent ? 'Active' : dateStr}</span>
+                    </span>`;
+                }).join('');
+
+                return `
+                    <div class="tech-room-item">
+                        <div class="tech-header">
+                            <span>${room.room} <span class="serial">#${room.serial}</span></span>
+                            <span class="total">${fmt(total)}</span>
+                        </div>
+                        <div class="tech-tubes">${tubesHtml}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Also generate technical recommendations text
+            const rooms = data.map(d => ({ ...d, exposure: totalTubeCount(d) }));
+            const overallAvg = sum(rooms.map(d => dailyAverage(d.exposure, d.startDate))) / rooms.length;
+            const highUsageRooms = rooms.filter(d => dailyAverage(d.exposure, d.startDate) > overallAvg * 1.5);
+            const highUsageList = highUsageRooms.map(d => d.room).join(', ') || 'None';
+            const multiTubeRooms = rooms.filter(d => d.tubes.length > 1);
+            const multiTubeList = multiTubeRooms.map(d => `${d.room} (${d.tubes.length} tubes)`).join(', ') || 'None';
+
+            document.getElementById('techRecommendationsText').innerHTML = `
+                <strong>🔧 Technical Recommendations</strong><br/>
+                • <strong>Tube wear monitoring:</strong> Rooms with high daily exposure (${highUsageList}) should have their X‑ray tubes inspected more frequently to prevent unexpected failures.<br/>
+                • <strong>Replacement planning:</strong> ${multiTubeList.length > 0 ? `Rooms with multiple tubes (${multiTubeList}) have undergone replacements. Review the replacement dates to anticipate future needs.` : 'No rooms have had tube replacements. Continue monitoring for wear patterns.'}<br/>
+                • <strong>Preventive maintenance:</strong> Schedule regular maintenance for the busiest rooms based on their exposure count. Consider implementing a predictive maintenance program using the daily exposure data.<br/>
+                • <strong>Current tube tracking:</strong> The list below shows the current active tube for each room. Verify that the tube count matches the manufacturer's recommended lifespan.<br/>
+            `;
+        }
+
+        function renderManagementRecommendations() {
             const rooms = data.map(d => ({ ...d, exposure: totalTubeCount(d) }));
             const totalExposure = sum(rooms.map(d => d.exposure));
             const busiest = rooms.reduce((a, b) => a.exposure > b.exposure ? a : b);
             const quietest = rooms.reduce((a, b) => a.exposure < b.exposure ? a : b);
+            const avgDailyAll = rooms.map(d => dailyAverage(d.exposure, d.startDate));
+            const overallAvg = sum(avgDailyAll) / avgDailyAll.length;
+            const maxDaily = Math.max(...avgDailyAll);
+            const minDaily = Math.min(...avgDailyAll);
+            const highUsageRooms = rooms.filter(d => dailyAverage(d.exposure, d.startDate) > overallAvg * 1.5);
+            const highUsageList = highUsageRooms.map(d => d.room).join(', ') || 'None';
 
-            const rec = `
-                <strong>🔍 Key Observations</strong><br/>
+            return `
+                <strong>📋 Key Observations</strong><br/>
                 • <strong>Total exposure</strong> across all rooms: <strong>${fmt(totalExposure)}</strong><br/>
                 • <strong>Busiest</strong> room: <strong>${busiest.room}</strong> (${fmt(busiest.exposure)} exposures)<br/>
                 • <strong>Quietest</strong> room: <strong>${quietest.room}</strong> (${fmt(quietest.exposure)} exposures)<br/>
+                • <strong>Avg daily exposure</strong> per room: <strong>${fmt(Math.round(overallAvg))}</strong> (range: ${fmt(Math.round(minDaily))} – ${fmt(Math.round(maxDaily))})<br/>
                 <br/>
                 <strong>💡 Suggestions for Management Review</strong><br/>
-                • <strong>Patient distribution:</strong> The data indicates a notable difference in workload between the busiest and quietest rooms. Management may wish to review patient allocation strategies to promote balanced utilization and equitable staff workload across all rooms.<br/>
-                • <strong>Tube maintenance planning:</strong> Rooms with higher daily exposure averages may experience accelerated tube wear. We recommend reviewing replacement schedules proactively to minimise unexpected downtime and ensure consistent service availability.<br/>
-                • <strong>Performance benchmarking:</strong> Comparing each room's daily average against departmental targets could help identify units that may benefit from additional maintenance or operational adjustments. Rooms exceeding 150% of the overall average might be prioritised for further review.<br/>
-              `;
-            document.getElementById('recommendationBox').innerHTML = rec;
+                • <strong>Patient distribution:</strong> The data shows a significant workload gap between <strong>${busiest.room}</strong> and <strong>${quietest.room}</strong>. Management may wish to review patient allocation strategies to promote balanced utilization and equitable staff workload across all rooms.<br/>
+                • <strong>Operational efficiency:</strong> Rooms with daily averages exceeding 150% of the overall average (${highUsageList}) may benefit from operational review or additional resources.<br/>
+                • <strong>Performance benchmarking:</strong> Comparing daily averages against departmental targets could help identify areas for improvement.<br/>
+            `;
+        }
+
+        function renderRecommendations() {
+            const managementHTML = renderManagementRecommendations();
+            document.getElementById('managementRecommendations').innerHTML = managementHTML;
+            // Tech section is updated separately (renderTechDetails includes both details and recommendations text)
         }
 
         function renderKPIs() {
@@ -975,9 +1167,53 @@
             renderKPIs();
             renderRanking();
             renderDailyAvg();
+            renderTechDetails();
             renderRecommendations();
             buildChart();
         }
+
+        // ─── DROPDOWN HANDLING ──────────────────────────────────
+        const settingsBtn = document.getElementById('settingsBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        settingsBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        dropdownMenu.addEventListener('click', function(e) {
+            const item = e.target.closest('.dropdown-item');
+            if (!item) return;
+            const action = item.dataset.action;
+            dropdownMenu.classList.remove('active');
+
+            if (action === 'token') {
+                loadConfigToForm();
+                document.getElementById('configModal').classList.add('active');
+            } else if (action === 'edit') {
+                buildModal();
+                document.getElementById('editorModal').classList.add('active');
+            } else if (action === 'tech') {
+                // Toggle technical section visibility and scroll to it
+                const techSection = document.getElementById('techSection');
+                const isVisible = techSection.classList.contains('visible');
+                if (!isVisible) {
+                    techSection.classList.add('visible');
+                    // Scroll to the section
+                    setTimeout(() => {
+                        techSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                } else {
+                    techSection.classList.remove('visible');
+                }
+            }
+        });
 
         // ─── TOAST ──────────────────────────────────────────────
         let toastTimer = null;
@@ -1032,7 +1268,7 @@
         async function commitToGitHub(content, filePath, commitMessage) {
             const config = getGitHubConfig();
             if (!config || !config.token) {
-                throw new Error('GitHub token not configured. Please click "Token Settings" and enter your token.');
+                throw new Error('GitHub token not configured. Please set it in Token Settings.');
             }
             const { token, owner, repo, path, branch } = config;
             const basePath = path.substring(0, path.lastIndexOf('/') + 1) || '';
@@ -1342,11 +1578,6 @@
 
         document.getElementById('saveBtn').addEventListener('click', saveData);
 
-        document.getElementById('editBtn').addEventListener('click', function() {
-            buildModal();
-            document.getElementById('editorModal').classList.add('active');
-        });
-
         document.getElementById('modalCloseBtn').addEventListener('click', function() {
             document.getElementById('editorModal').classList.remove('active');
         });
@@ -1362,11 +1593,6 @@
         document.getElementById('modalSaveBtn').addEventListener('click', function() {
             applyModalChanges();
             document.getElementById('editorModal').classList.remove('active');
-        });
-
-        document.getElementById('configBtn').addEventListener('click', function() {
-            loadConfigToForm();
-            document.getElementById('configModal').classList.add('active');
         });
 
         document.getElementById('configCloseBtn').addEventListener('click', function() {
