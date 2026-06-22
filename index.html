@@ -67,7 +67,7 @@
         .header-right {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         .badge-date {
@@ -84,7 +84,7 @@
             background: #1a3a5c;
             border: none;
             color: white;
-            padding: 8px 24px;
+            padding: 8px 20px;
             border-radius: 40px;
             font-weight: 600;
             font-size: 13px;
@@ -94,7 +94,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .btn:hover {
             background: #0f2a44;
@@ -114,6 +114,27 @@
         }
         .btn-refresh:hover {
             background: #1e4d2a;
+        }
+        .btn-save {
+            background: #0b6e4f;
+            box-shadow: none;
+        }
+        .btn-save:hover {
+            background: #085a3f;
+        }
+        .btn-load {
+            background: #7a5a3a;
+            box-shadow: none;
+        }
+        .btn-load:hover {
+            background: #5f462e;
+        }
+        .btn-edit {
+            background: #7a4a6a;
+            box-shadow: none;
+        }
+        .btn-edit:hover {
+            background: #5f3a52;
         }
 
         .kpi-grid {
@@ -197,7 +218,7 @@
 
         .nested-bottom-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1.6fr;
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
             margin-top: 20px;
             flex: 1;
@@ -261,6 +282,7 @@
             border-left: 4px solid #3b82f6;
         }
 
+        /* Right column now holds recommendations */
         .recommendation-box {
             background: #f0f7ff;
             border-radius: 12px;
@@ -276,91 +298,143 @@
             color: #0b2a4a;
         }
 
-        .room-cards {
+        /* Hidden file input */
+        #fileInput {
+            display: none;
+        }
+
+        /* Modal overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
             display: flex;
-            flex-direction: column;
-            gap: 16px;
-            flex: 1;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 28px;
+            max-width: 900px;
+            width: 95%;
+            max-height: 90vh;
             overflow-y: auto;
-            max-height: 800px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
-        .room-card {
-            background: #f8fafd;
-            border-radius: 16px;
-            padding: 12px 16px;
-            border: 1px solid rgba(26, 58, 92, 0.06);
-            flex-shrink: 0;
-        }
-        .room-card .room-header {
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 6px;
+            margin-bottom: 20px;
         }
-        .room-card .room-header .name {
-            font-weight: 700;
-            font-size: 15px;
+        .modal-header h2 {
+            font-size: 22px;
             color: #0b2a4a;
         }
-        .room-card .room-header .serial {
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #6b7f96;
+            transition: 0.2s;
+        }
+        .modal-close:hover {
+            color: #1a2639;
+            transform: rotate(90deg);
+        }
+        .modal-room-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .modal-room-card {
+            background: #f8fafd;
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid rgba(26, 58, 92, 0.06);
+        }
+        .modal-room-card .room-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .modal-room-card .room-header .name-input {
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            background: transparent;
+            padding: 2px 4px;
+            border-bottom: 1px solid transparent;
+        }
+        .modal-room-card .room-header .name-input:focus {
+            border-bottom-color: #1a3a5c;
+            outline: none;
+        }
+        .modal-room-card .room-header .serial-input {
             font-size: 12px;
             color: #6b7f96;
+            border: none;
+            background: transparent;
+            padding: 2px 4px;
+            border-bottom: 1px solid transparent;
+            width: 80px;
         }
-        .room-card .room-header .date-group {
+        .modal-room-card .room-header .serial-input:focus {
+            border-bottom-color: #1a3a5c;
+            outline: none;
+        }
+        .modal-room-card .room-header .date-group {
             display: flex;
-            align-items: center;
             gap: 8px;
+            align-items: center;
             flex-wrap: wrap;
+            margin-left: auto;
         }
-        .room-card .room-header .date-group label {
+        .modal-room-card .room-header .date-group label {
             font-size: 11px;
             font-weight: 600;
             color: #4b5e77;
         }
-        .room-card .room-header .date-group input[type="date"] {
+        .modal-room-card .room-header .date-group input[type="date"] {
             padding: 3px 6px;
             border: 1px solid #dce3ed;
             border-radius: 6px;
             font-size: 12px;
-            font-weight: 500;
-            background: white;
             width: 130px;
-            font-family: 'Inter', sans-serif;
         }
-        .room-card .room-header .date-group input[type="date"]:focus {
-            border-color: #1a3a5c;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.15);
-        }
-        .room-card .room-header .date-group input[type="date"]:disabled {
-            background: #f0f2f5;
-            color: #6b7f96;
-        }
-
-        .tube-table {
+        .modal-room-card .tube-table {
             width: 100%;
-            margin-top: 4px;
+            margin-top: 6px;
             border-collapse: collapse;
             font-size: 12px;
         }
-        .tube-table th {
+        .modal-room-card .tube-table th {
             text-align: left;
             font-weight: 600;
             color: #4b5e77;
-            padding: 3px 6px;
+            padding: 4px 6px;
             border-bottom: 1px solid #dce3ed;
             font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
-        .tube-table td {
-            padding: 3px 6px;
+        .modal-room-card .tube-table td {
+            padding: 4px 6px;
             vertical-align: middle;
         }
-        .tube-table input[type="date"],
-        .tube-table input[type="number"] {
+        .modal-room-card .tube-table input[type="date"],
+        .modal-room-card .tube-table input[type="number"] {
             padding: 3px 5px;
             border: 1px solid #dce3ed;
             border-radius: 5px;
@@ -368,30 +442,24 @@
             width: 100%;
             background: white;
         }
-        .tube-table input[type="date"] {
+        .modal-room-card .tube-table input[type="date"] {
             width: 120px;
         }
-        .tube-table input[type="number"] {
+        .modal-room-card .tube-table input[type="number"] {
             width: 80px;
         }
-        .tube-table input:focus {
-            border-color: #1a3a5c;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(26, 58, 92, 0.15);
-        }
-        .tube-table .btn-remove {
+        .modal-room-card .tube-table .btn-remove {
             background: none;
             border: none;
             color: #b0b8c5;
             cursor: pointer;
             font-size: 14px;
             padding: 0 4px;
-            transition: 0.2s;
         }
-        .tube-table .btn-remove:hover {
+        .modal-room-card .tube-table .btn-remove:hover {
             color: #d9534f;
         }
-        .btn-add-tube {
+        .modal-room-card .btn-add-tube {
             background: none;
             border: 1px dashed #b0c4de;
             border-radius: 20px;
@@ -401,57 +469,19 @@
             color: #1a3a5c;
             cursor: pointer;
             transition: 0.2s;
-            margin-top: 4px;
+            margin-top: 6px;
         }
-        .btn-add-tube:hover {
+        .modal-room-card .btn-add-tube:hover {
             background: #e6f0fa;
             border-color: #1a3a5c;
         }
-
-        .room-footer {
+        .modal-actions {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 4px;
-            padding-top: 4px;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
             border-top: 1px solid #e8ecf1;
-            flex-wrap: wrap;
-            font-size: 13px;
-        }
-        .room-footer .total-tube {
-            font-weight: 700;
-            color: #0b2a4a;
-        }
-        .room-footer .total-tube .label {
-            font-weight: 400;
-            color: #6b7f96;
-        }
-        .room-footer .daily-avg {
-            font-weight: 600;
-            color: #1a3a5c;
-        }
-        .room-footer .daily-avg .label {
-            font-weight: 400;
-            color: #6b7f96;
-        }
-
-        .exposure-badge {
-            background: #e6f0fa;
-            border-radius: 20px;
-            padding: 2px 14px;
-            font-weight: 700;
-            font-size: 14px;
-            color: #0b2a4a;
-            margin-left: 10px;
-        }
-
-        .loading-overlay {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-size: 20px;
-            color: #1a3a5c;
         }
 
         @media (max-width: 1024px) {
@@ -461,14 +491,14 @@
             .nested-bottom-grid {
                 grid-template-columns: 1fr 1fr;
             }
-            .room-cards {
-                max-height: none;
-            }
             body {
                 padding: 18px 16px;
             }
             .kpi-grid {
                 grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            }
+            .modal-content {
+                padding: 16px;
             }
         }
         @media (max-width: 600px) {
@@ -486,14 +516,17 @@
             .nested-bottom-grid {
                 grid-template-columns: 1fr;
             }
-            .room-card .room-header {
+            .modal-room-card .room-header {
                 flex-direction: column;
                 align-items: stretch;
             }
-            .tube-table input[type="date"] {
+            .modal-room-card .room-header .date-group {
+                margin-left: 0;
+            }
+            .modal-room-card .tube-table input[type="date"] {
                 width: 100px;
             }
-            .tube-table input[type="number"] {
+            .modal-room-card .tube-table input[type="number"] {
                 width: 70px;
             }
             .card {
@@ -501,6 +534,10 @@
             }
             .chart-wrapper {
                 height: 250px;
+            }
+            .modal-content {
+                max-height: 95vh;
+                padding: 12px;
             }
         }
         .chart-wrapper canvas {
@@ -537,20 +574,22 @@
     <!-- Loading indicator -->
     <div id="loading" class="loading-overlay">⏳ Loading data…</div>
 
-    <!-- Main content (hidden until data loads) -->
+    <!-- Main content -->
     <div id="dashboard" style="display:none;">
         <header class="dashboard-header">
             <div class="header-left">
                 <h1>📊 Ysio Max · Usage Analytics</h1>
                 <div class="sub">
                     <span id="roomCount">0</span> rooms · exposure = sum of tube counts · daily averages
+                    <span style="margin-left:12px;font-weight:400;color:#6b7f96;" id="dataSourceLabel">(data.json)</span>
                 </div>
             </div>
             <div class="header-right">
                 <div class="badge-date">📅 <span id="dateDisplay"></span></div>
-                <button class="btn btn-refresh" id="refreshBtn">🔄 Refresh Data</button>
-                <button class="btn btn-reset" id="resetBtn">↺ Reset Edits</button>
-                <button class="btn" id="exportBtn">⬇ Export PNG</button>
+                <button class="btn btn-load" id="loadBtn">📂 Load</button>
+                <button class="btn btn-save" id="saveBtn">💾 Save</button>
+                <button class="btn btn-edit" id="editBtn">✏️ Edit Data</button>
+                <button class="btn btn-refresh" id="refreshBtn">🔄 Reload Default</button>
             </div>
         </header>
 
@@ -581,36 +620,48 @@
                         </div>
                         <div class="daily-avg-list" id="dailyAvgListNested"></div>
                     </div>
-                    <div class="stat-card">
-                        <div class="card-header">
-                            <h3>💡 Recommendations</h3>
-                            <span class="pill">insights</span>
-                        </div>
-                        <div class="recommendation-box" id="recommendationBoxNested">
-                            Loading…
-                        </div>
-                    </div>
                 </div>
             </div>
 
+            <!-- Right column: Recommendations -->
             <div class="card">
                 <div class="card-header">
-                    <h3>✏️ Room Data &amp; Tube History</h3>
-                    <span class="pill">exposure = sum of tubes</span>
+                    <h3>💡 Recommendations</h3>
+                    <span class="pill">insights</span>
                 </div>
-                <div class="room-cards" id="roomCardsContainer"></div>
+                <div class="recommendation-box" id="recommendationBox">
+                    Loading…
+                </div>
             </div>
         </div>
 
         <div style="margin-top: 20px; font-size: 13px; color: #6b7f96; text-align: center; border-top: 1px solid rgba(26,58,92,0.06); padding-top: 16px;">
-            Siemens Ysio Max · Data as of <span id="footerDate"></span> · Exposure is calculated as the sum of all tube counts for each room.
-            <br>Data sourced from <strong>data.json</strong> — edit that file to update the dashboard.
+            Siemens Ysio Max · Data as of <span id="footerDate"></span> · Exposure = sum of tube counts.
+            <br>Use <strong>Load</strong> to open a saved JSON file, <strong>Save</strong> to export current data, and <strong>Edit Data</strong> to modify room and tube details.
+        </div>
+    </div>
+
+    <!-- Hidden file input -->
+    <input type="file" id="fileInput" accept=".json" />
+
+    <!-- Modal Editor -->
+    <div class="modal-overlay" id="editorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>✏️ Edit Room Data &amp; Tube History</h2>
+                <button class="modal-close" id="modalCloseBtn">&times;</button>
+            </div>
+            <div id="modalRoomCards" class="modal-room-cards"></div>
+            <div class="modal-actions">
+                <button class="btn btn-reset" id="modalCancelBtn">Cancel</button>
+                <button class="btn" id="modalSaveBtn">✅ Apply Changes</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // ─── GLOBAL DATA ──────────────────────────────────────────
-        let data = []; // will be loaded from JSON
+        // ─── GLOBAL STATE ──────────────────────────────────────────
+        let data = []; // current data array
 
         // ─── HELPERS ──────────────────────────────────────────────
         function fmt(n) { return n.toLocaleString(); }
@@ -631,20 +682,22 @@
             return exposure / days;
         }
 
-        // ─── LOAD DATA FROM JSON ─────────────────────────────────
-        async function loadData() {
+        function cloneData(d) { return JSON.parse(JSON.stringify(d)); }
+
+        // ─── LOAD DATA FROM DEFAULT (data.json) ──────────────────
+        async function loadDefaultData() {
             try {
-                const response = await fetch('data.json?v=' + Date.now()); // bust cache
+                const response = await fetch('data.json?v=' + Date.now());
                 if (!response.ok) throw new Error('Network response was not ok');
                 const json = await response.json();
                 if (!json.rooms || !Array.isArray(json.rooms)) throw new Error('Invalid data format');
                 data = json.rooms;
-                document.getElementById('roomCount').textContent = data.length;
+                document.getElementById('dataSourceLabel').textContent = '(data.json)';
                 return true;
             } catch (error) {
-                console.error('Failed to load data:', error);
-                showToast('⚠️ Failed to load data.json. Using fallback data.');
-                // Fallback to default data (embedded) so dashboard still works
+                console.error('Failed to load data.json:', error);
+                showToast('⚠️ Using fallback embedded data.');
+                // Fallback data
                 data = [
                     { room: 'Room 1', serial: '27164', installDate: '2018-01-01', startDate: '2018-01-01',
                         tubes: [{ replacementDate: '', tubeCount: 69788 }] },
@@ -666,7 +719,7 @@
                         tubes: [{ replacementDate: '2024-06-03', tubeCount: 250000 }, { replacementDate: '',
                             tubeCount: 165013 }] }
                 ];
-                document.getElementById('roomCount').textContent = data.length;
+                document.getElementById('dataSourceLabel').textContent = '(fallback)';
                 return false;
             }
         }
@@ -767,136 +820,7 @@
             }
         }
 
-        // ─── RENDER ROOM CARDS ──────────────────────────────────
-        function renderRoomCards() {
-            const container = document.getElementById('roomCardsContainer');
-            container.innerHTML = data.map((room, idx) => {
-                const exposure = totalTubeCount(room);
-                const tubeRows = room.tubes.map((t, tIdx) => `
-                    <tr>
-                      <td><input type="date" class="tube-date" data-roomidx="${idx}" data-tubeidx="${tIdx}" value="${t.replacementDate}" /></td>
-                      <td><input type="number" class="tube-count" data-roomidx="${idx}" data-tubeidx="${tIdx}" value="${t.tubeCount}" step="1" min="0" /></td>
-                      <td><button class="btn-remove" data-roomidx="${idx}" data-tubeidx="${tIdx}" title="Remove tube">✕</button></td>
-                    </tr>
-                  `).join('');
-
-                const avgDaily = dailyAverage(exposure, room.startDate);
-
-                return `
-                  <div class="room-card" data-roomidx="${idx}">
-                    <div class="room-header">
-                      <div>
-                        <span class="name">${room.room}</span>
-                        <span class="serial">#${room.serial}</span>
-                        <span class="exposure-badge" id="badge-${idx}">${fmt(exposure)}</span>
-                      </div>
-                      <div class="date-group">
-                        <label>Install</label>
-                        <input type="date" class="install-date" data-roomidx="${idx}" value="${room.installDate}" disabled style="background:#f0f2f5;" />
-                        <label>Start</label>
-                        <input type="date" class="start-date" data-roomidx="${idx}" value="${room.startDate}" />
-                      </div>
-                    </div>
-                    <table class="tube-table">
-                      <thead><tr><th>Replacement Date</th><th>Tube Count</th><th style="width:30px;"></th></tr></thead>
-                      <tbody id="tube-body-${idx}">${tubeRows}</tbody>
-                    </table>
-                    <button class="btn-add-tube" data-roomidx="${idx}">+ Add Tube</button>
-                    <div class="room-footer">
-                      <span class="total-tube"><span class="label">Total Exposure:</span> <span id="total-${idx}">${fmt(exposure)}</span></span>
-                      <span class="daily-avg"><span class="label">Daily Avg:</span> <span id="daily-${idx}">${fmt(Math.round(avgDaily))}</span></span>
-                    </div>
-                  </div>
-                `;
-            }).join('');
-
-            // ─── Event Listeners ──────────────────────────────
-            // Start date
-            document.querySelectorAll('.start-date').forEach(inp => {
-                inp.addEventListener('change', function() {
-                    const idx = parseInt(this.dataset.roomidx);
-                    data[idx].startDate = this.value;
-                    updateRoomDisplay(idx);
-                    updateAllDerived();
-                });
-            });
-
-            // Tube date and count
-            document.querySelectorAll('.tube-date').forEach(inp => {
-                inp.addEventListener('change', function() {
-                    const ridx = parseInt(this.dataset.roomidx);
-                    const tidx = parseInt(this.dataset.tubeidx);
-                    data[ridx].tubes[tidx].replacementDate = this.value;
-                    updateRoomDisplay(ridx);
-                    updateAllDerived();
-                });
-            });
-
-            document.querySelectorAll('.tube-count').forEach(inp => {
-                inp.addEventListener('input', function() {
-                    const ridx = parseInt(this.dataset.roomidx);
-                    const tidx = parseInt(this.dataset.tubeidx);
-                    const val = parseInt(this.value);
-                    if (!isNaN(val) && val >= 0) {
-                        data[ridx].tubes[tidx].tubeCount = val;
-                        updateRoomDisplay(ridx);
-                        updateAllDerived();
-                    }
-                });
-            });
-
-            // Remove tube
-            document.querySelectorAll('.btn-remove').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const ridx = parseInt(this.dataset.roomidx);
-                    const tidx = parseInt(this.dataset.tubeidx);
-                    if (data[ridx].tubes.length <= 1) {
-                        showToast('⚠️ At least one tube required');
-                        return;
-                    }
-                    data[ridx].tubes.splice(tidx, 1);
-                    renderRoomCards();
-                    updateAllDerived();
-                });
-            });
-
-            // Add tube
-            document.querySelectorAll('.btn-add-tube').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const ridx = parseInt(this.dataset.roomidx);
-                    data[ridx].tubes.push({ replacementDate: '', tubeCount: 0 });
-                    renderRoomCards();
-                    updateAllDerived();
-                });
-            });
-        }
-
-        // ─── UPDATE SINGLE ROOM DISPLAY ──────────────────────────
-        function updateRoomDisplay(idx) {
-            const room = data[idx];
-            const exposure = totalTubeCount(room);
-            const avgDaily = dailyAverage(exposure, room.startDate);
-
-            const badge = document.getElementById(`badge-${idx}`);
-            if (badge) badge.textContent = fmt(exposure);
-
-            const totalSpan = document.getElementById(`total-${idx}`);
-            if (totalSpan) totalSpan.textContent = fmt(exposure);
-
-            const dailySpan = document.getElementById(`daily-${idx}`);
-            if (dailySpan) dailySpan.textContent = fmt(Math.round(avgDaily));
-        }
-
-        // ─── UPDATE ALL DERIVED ──────────────────────────────────
-        function updateAllDerived() {
-            renderKPIs();
-            renderRanking();
-            renderDailyAvg();
-            renderRecommendations();
-            buildChart();
-        }
-
-        // ─── RANKING LISTS ──────────────────────────────────────────
+        // ─── RANKINGS ──────────────────────────────────────────────
         function renderRanking() {
             const sorted = [...data].map(d => ({ ...d, exposure: totalTubeCount(d) }))
                 .sort((a, b) => b.exposure - a.exposure);
@@ -926,6 +850,7 @@
               `).join('');
         }
 
+        // ─── RECOMMENDATIONS ──────────────────────────────────────
         function renderRecommendations() {
             const rooms = data.map(d => ({ ...d, exposure: totalTubeCount(d) }));
             const totalExposure = sum(rooms.map(d => d.exposure));
@@ -936,7 +861,7 @@
             const maxDaily = Math.max(...avgDailyAll);
             const minDaily = Math.min(...avgDailyAll);
 
-            const recommendations = `
+            const rec = `
                 <strong>🔍 Key Observations</strong><br/>
                 • <strong>Total exposure</strong> across all rooms: <strong>${fmt(totalExposure)}</strong><br/>
                 • <strong>Busiest</strong> room: <strong>${busiest.room}</strong> (${fmt(busiest.exposure)} exposures)<br/>
@@ -948,7 +873,7 @@
                 • <strong>Tube maintenance planning:</strong> Rooms with higher daily exposure averages may experience accelerated tube wear. We recommend reviewing replacement schedules proactively to minimise unexpected downtime and ensure consistent service availability.<br/>
                 • <strong>Performance benchmarking:</strong> Comparing each room's daily average against departmental targets could help identify units that may benefit from additional maintenance or operational adjustments. Rooms exceeding 150% of the overall average might be prioritised for further review.<br/>
               `;
-            document.getElementById('recommendationBoxNested').innerHTML = recommendations;
+            document.getElementById('recommendationBox').innerHTML = rec;
         }
 
         // ─── KPI ──────────────────────────────────────────────────
@@ -977,8 +902,12 @@
 
         // ─── FULL REFRESH ──────────────────────────────────────────
         function fullRefresh() {
-            renderRoomCards();
-            updateAllDerived();
+            document.getElementById('roomCount').textContent = data.length;
+            renderKPIs();
+            renderRanking();
+            renderDailyAvg();
+            renderRecommendations();
+            buildChart();
         }
 
         // ─── TOAST ────────────────────────────────────────────────
@@ -989,56 +918,205 @@
             toast.textContent = msg;
             toast.classList.add('show');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // ─── RESET EDITS ──────────────────────────────────────────
-        document.getElementById('resetBtn').addEventListener('click', function() {
-            // Reload from JSON (or fallback)
-            loadData().then(() => {
-                fullRefresh();
-                showToast('↺ Data reloaded from data.json');
+        // ─── FILE OPERATIONS ──────────────────────────────────────
+
+        // Save current data as JSON file with timestamp
+        function saveData() {
+            const now = new Date();
+            const timestamp = now.getFullYear() +
+                String(now.getMonth() + 1).padStart(2, '0') +
+                String(now.getDate()).padStart(2, '0') + '_' +
+                String(now.getHours()).padStart(2, '0') +
+                String(now.getMinutes()).padStart(2, '0');
+            const filename = `YsioMax_Data_${timestamp}.json`;
+            const json = JSON.stringify({ rooms: data }, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`✅ Data saved as ${filename}`);
+        }
+
+        // Load data from file
+        function loadDataFromFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const json = JSON.parse(e.target.result);
+                    if (!json.rooms || !Array.isArray(json.rooms)) throw new Error('Invalid format');
+                    data = json.rooms;
+                    document.getElementById('dataSourceLabel').textContent = `(${file.name})`;
+                    fullRefresh();
+                    showToast(`✅ Loaded ${file.name} (${data.length} rooms)`);
+                } catch (err) {
+                    showToast('⚠️ Invalid file format. Please select a valid JSON.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // ─── MODAL EDITOR ──────────────────────────────────────────
+
+        // Build modal content from current data
+        function buildModal() {
+            const container = document.getElementById('modalRoomCards');
+            container.innerHTML = data.map((room, idx) => {
+                const tubeRows = room.tubes.map((t, tIdx) => `
+                    <tr>
+                      <td><input type="date" class="modal-tube-date" data-roomidx="${idx}" data-tubeidx="${tIdx}" value="${t.replacementDate}" /></td>
+                      <td><input type="number" class="modal-tube-count" data-roomidx="${idx}" data-tubeidx="${tIdx}" value="${t.tubeCount}" step="1" min="0" /></td>
+                      <td><button class="modal-btn-remove" data-roomidx="${idx}" data-tubeidx="${tIdx}" title="Remove tube">✕</button></td>
+                    </tr>
+                  `).join('');
+
+                return `
+                  <div class="modal-room-card" data-roomidx="${idx}">
+                    <div class="room-header">
+                      <input class="name-input" data-roomidx="${idx}" value="${room.room}" placeholder="Room name" />
+                      <input class="serial-input" data-roomidx="${idx}" value="${room.serial}" placeholder="Serial" />
+                      <div class="date-group">
+                        <label>Install</label>
+                        <input type="date" class="modal-install-date" data-roomidx="${idx}" value="${room.installDate}" />
+                        <label>Start</label>
+                        <input type="date" class="modal-start-date" data-roomidx="${idx}" value="${room.startDate}" />
+                      </div>
+                    </div>
+                    <table class="tube-table">
+                      <thead><tr><th>Replacement Date</th><th>Tube Count</th><th style="width:30px;"></th></tr></thead>
+                      <tbody id="modal-tube-body-${idx}">${tubeRows}</tbody>
+                    </table>
+                    <button class="modal-btn-add-tube" data-roomidx="${idx}">+ Add Tube</button>
+                  </div>
+                `;
+            }).join('');
+
+            // Attach event listeners for modal
+            // Add tube
+            document.querySelectorAll('.modal-btn-add-tube').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const ridx = parseInt(this.dataset.roomidx);
+                    // We'll add a tube to the data temporarily, then rebuild modal
+                    data[ridx].tubes.push({ replacementDate: '', tubeCount: 0 });
+                    buildModal(); // rebuild to reflect
+                });
             });
+
+            // Remove tube
+            document.querySelectorAll('.modal-btn-remove').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const ridx = parseInt(this.dataset.roomidx);
+                    const tidx = parseInt(this.dataset.tubeidx);
+                    if (data[ridx].tubes.length <= 1) {
+                        showToast('⚠️ At least one tube required');
+                        return;
+                    }
+                    data[ridx].tubes.splice(tidx, 1);
+                    buildModal();
+                });
+            });
+
+            // We'll capture changes on "Apply Changes" instead of live updating
+        }
+
+        // Apply changes from modal inputs to data
+        function applyModalChanges() {
+            // Room name, serial, dates
+            document.querySelectorAll('.name-input').forEach(inp => {
+                const idx = parseInt(inp.dataset.roomidx);
+                data[idx].room = inp.value.trim() || data[idx].room;
+            });
+            document.querySelectorAll('.serial-input').forEach(inp => {
+                const idx = parseInt(inp.dataset.roomidx);
+                data[idx].serial = inp.value.trim() || data[idx].serial;
+            });
+            document.querySelectorAll('.modal-install-date').forEach(inp => {
+                const idx = parseInt(inp.dataset.roomidx);
+                data[idx].installDate = inp.value;
+            });
+            document.querySelectorAll('.modal-start-date').forEach(inp => {
+                const idx = parseInt(inp.dataset.roomidx);
+                data[idx].startDate = inp.value;
+            });
+            // Tube data
+            document.querySelectorAll('.modal-tube-date').forEach(inp => {
+                const ridx = parseInt(inp.dataset.roomidx);
+                const tidx = parseInt(inp.dataset.tubeidx);
+                data[ridx].tubes[tidx].replacementDate = inp.value;
+            });
+            document.querySelectorAll('.modal-tube-count').forEach(inp => {
+                const ridx = parseInt(inp.dataset.roomidx);
+                const tidx = parseInt(inp.dataset.tubeidx);
+                const val = parseInt(inp.value);
+                if (!isNaN(val) && val >= 0) {
+                    data[ridx].tubes[tidx].tubeCount = val;
+                }
+            });
+            fullRefresh();
+            showToast('✅ Data updated successfully');
+        }
+
+        // ─── EVENT BINDINGS ──────────────────────────────────────
+
+        // Load button triggers file picker
+        document.getElementById('loadBtn').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
         });
 
-        // ─── REFRESH DATA ─────────────────────────────────────────
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                loadDataFromFile(this.files[0]);
+            }
+            this.value = ''; // allow re-selecting same file
+        });
+
+        // Save button
+        document.getElementById('saveBtn').addEventListener('click', saveData);
+
+        // Refresh default
         document.getElementById('refreshBtn').addEventListener('click', function() {
-            loadData().then(() => {
+            loadDefaultData().then(() => {
                 fullRefresh();
-                showToast('🔄 Data refreshed from data.json');
+                showToast('🔄 Reloaded default data');
             });
         });
 
-        // ─── EXPORT ──────────────────────────────────────────────
-        document.getElementById('exportBtn').addEventListener('click', function() {
-            if (typeof html2canvas === 'undefined') {
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
-                script.onload = function() { captureDashboard(); };
-                document.head.appendChild(script);
-                showToast('⏳ Loading capture…');
-            } else {
-                captureDashboard();
-            }
+        // Edit button - show modal
+        document.getElementById('editBtn').addEventListener('click', function() {
+            // Copy current data to a temporary working copy? We'll edit directly on data.
+            // Build modal from current data
+            buildModal();
+            document.getElementById('editorModal').classList.add('active');
+        });
 
-            function captureDashboard() {
-                html2canvas(document.body, {
-                    scale: 1.8,
-                    backgroundColor: '#f0f4f9',
-                    allowTaint: false,
-                    useCORS: true,
-                    logging: false,
-                }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = `YsioMax_Usage_${new Date().toISOString().slice(0,10)}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                    showToast('✅ Snapshot saved!');
-                }).catch(() => showToast('⚠️ Capture failed'));
+        // Modal close/cancel
+        document.getElementById('modalCloseBtn').addEventListener('click', function() {
+            document.getElementById('editorModal').classList.remove('active');
+        });
+        document.getElementById('modalCancelBtn').addEventListener('click', function() {
+            document.getElementById('editorModal').classList.remove('active');
+        });
+        // Click outside modal to close
+        document.getElementById('editorModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
             }
         });
 
-        // ─── DATE ─────────────────────────────────────────────────
+        // Modal apply
+        document.getElementById('modalSaveBtn').addEventListener('click', function() {
+            applyModalChanges();
+            document.getElementById('editorModal').classList.remove('active');
+        });
+
+        // ─── DATE DISPLAY ──────────────────────────────────────────
         document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric',
             month: 'short', day: 'numeric' });
         document.getElementById('footerDate').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric',
@@ -1046,7 +1124,7 @@
 
         // ─── INIT ──────────────────────────────────────────────────
         async function init() {
-            await loadData();
+            await loadDefaultData();
             document.getElementById('loading').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
             fullRefresh();
