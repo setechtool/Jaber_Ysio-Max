@@ -10,6 +10,7 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&display=swap" rel="stylesheet" />
     <style>
+        /* ─── all existing styles (kept unchanged) ─── */
         * {
             margin: 0;
             padding: 0;
@@ -130,7 +131,6 @@
             background: #4a3a5a;
         }
 
-        /* Dropdown menu */
         .dropdown {
             position: relative;
             display: inline-block;
@@ -319,7 +319,6 @@
             border-left: 4px solid #3b82f6;
         }
 
-        /* Right panel: recommendations + technical section */
         .recommendation-box {
             background: #f0f7ff;
             border-radius: 12px;
@@ -413,6 +412,7 @@
             display: none;
         }
 
+        /* ─── MODAL OVERLAY ─── */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -424,84 +424,131 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(4px);
         }
         .modal-overlay.active {
             display: flex;
         }
+
+        /* ─── MODAL CONTENT ─── */
         .modal-content {
             background: white;
             border-radius: 24px;
-            padding: 28px;
-            max-width: 900px;
+            padding: 28px 32px;
+            max-width: 920px;
             width: 95%;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eef3f9;
         }
         .modal-header h2 {
             font-size: 22px;
+            font-weight: 700;
             color: #0b2a4a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .modal-close {
-            background: none;
+            background: #f0f4f9;
             border: none;
-            font-size: 28px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
             cursor: pointer;
             color: #6b7f96;
             transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .modal-close:hover {
+            background: #e8ecf1;
             color: #1a2639;
             transform: rotate(90deg);
         }
+
+        /* ── MODAL ROOM CARDS ── */
         .modal-room-cards {
             display: flex;
             flex-direction: column;
             gap: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         .modal-room-card {
             background: #f8fafd;
             border-radius: 16px;
-            padding: 16px;
+            padding: 18px 20px;
             border: 1px solid rgba(26, 58, 92, 0.06);
+            transition: 0.15s;
         }
+        .modal-room-card:hover {
+            border-color: rgba(26, 58, 92, 0.12);
+            background: #f5f8fc;
+        }
+
+        /* ── ROOM HEADER (inside modal) ── */
         .modal-room-card .room-header {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
         .modal-room-card .room-header .name-input {
             font-weight: 700;
             font-size: 15px;
-            border: none;
-            background: transparent;
-            padding: 2px 4px;
-            border-bottom: 1px solid transparent;
+            border: 1px solid #dce3ed;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            min-width: 100px;
+            transition: 0.15s;
+            font-family: 'Inter', sans-serif;
         }
         .modal-room-card .room-header .name-input:focus {
-            border-bottom-color: #1a3a5c;
+            border-color: #1a3a5c;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.12);
+        }
+        .modal-room-card .room-header .serial-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: white;
+            border: 1px solid #dce3ed;
+            border-radius: 8px;
+            padding: 0 4px 0 8px;
+            transition: 0.15s;
+        }
+        .modal-room-card .room-header .serial-group:focus-within {
+            border-color: #1a3a5c;
+            box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.12);
+        }
+        .modal-room-card .room-header .serial-group .sn-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4b5e77;
+            user-select: none;
         }
         .modal-room-card .room-header .serial-input {
-            font-size: 12px;
-            color: #6b7f96;
+            font-size: 13px;
+            color: #0b2a4a;
             border: none;
             background: transparent;
-            padding: 2px 4px;
-            border-bottom: 1px solid transparent;
+            padding: 6px 4px;
             width: 80px;
-        }
-        .modal-room-card .room-header .serial-input:focus {
-            border-bottom-color: #1a3a5c;
+            font-family: 'Inter', sans-serif;
             outline: none;
         }
         .modal-room-card .room-header .date-group {
@@ -515,17 +562,29 @@
             font-size: 11px;
             font-weight: 600;
             color: #4b5e77;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
         .modal-room-card .room-header .date-group input[type="date"] {
-            padding: 3px 6px;
+            padding: 5px 8px;
             border: 1px solid #dce3ed;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 12px;
+            background: white;
             width: 130px;
+            font-family: 'Inter', sans-serif;
+            transition: 0.15s;
         }
+        .modal-room-card .room-header .date-group input[type="date"]:focus {
+            border-color: #1a3a5c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.12);
+        }
+
+        /* ── TUBE TABLE (inside modal) ── */
         .modal-room-card .tube-table {
             width: 100%;
-            margin-top: 6px;
+            margin-top: 4px;
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -533,23 +592,36 @@
             text-align: left;
             font-weight: 600;
             color: #4b5e77;
-            padding: 4px 6px;
-            border-bottom: 1px solid #dce3ed;
+            padding: 6px 8px;
+            border-bottom: 2px solid #dce3ed;
             font-size: 10px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .modal-room-card .tube-table td {
-            padding: 4px 6px;
+            padding: 6px 8px;
             vertical-align: middle;
+            border-bottom: 1px solid #eef3f9;
+        }
+        .modal-room-card .tube-table tr:last-child td {
+            border-bottom: none;
         }
         .modal-room-card .tube-table input[type="date"],
         .modal-room-card .tube-table input[type="number"] {
-            padding: 3px 5px;
+            padding: 5px 8px;
             border: 1px solid #dce3ed;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 12px;
             width: 100%;
             background: white;
+            font-family: 'Inter', sans-serif;
+            transition: 0.15s;
+        }
+        .modal-room-card .tube-table input[type="date"]:focus,
+        .modal-room-card .tube-table input[type="number"]:focus {
+            border-color: #1a3a5c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.12);
         }
         .modal-room-card .tube-table input[type="date"] {
             width: 120px;
@@ -562,37 +634,60 @@
             border: none;
             color: #b0b8c5;
             cursor: pointer;
-            font-size: 14px;
-            padding: 0 4px;
+            font-size: 16px;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            background: transparent;
         }
         .modal-room-card .tube-table .btn-remove:hover {
+            background: #fee2e2;
             color: #d9534f;
         }
+
+        /* ── ADD TUBE BUTTON ── */
         .modal-room-card .btn-add-tube {
             background: none;
             border: 1px dashed #b0c4de;
             border-radius: 20px;
-            padding: 2px 12px;
-            font-size: 11px;
+            padding: 6px 18px;
+            font-size: 12px;
             font-weight: 600;
             color: #1a3a5c;
             cursor: pointer;
             transition: 0.2s;
-            margin-top: 6px;
+            margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
         .modal-room-card .btn-add-tube:hover {
             background: #e6f0fa;
             border-color: #1a3a5c;
+            border-style: solid;
         }
+
+        /* ── MODAL ACTIONS ── */
         .modal-actions {
             display: flex;
             justify-content: flex-end;
             gap: 12px;
-            margin-top: 16px;
+            margin-top: 8px;
             padding-top: 16px;
-            border-top: 1px solid #e8ecf1;
+            border-top: 1px solid #eef3f9;
+        }
+        .modal-actions .btn {
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-size: 13px;
         }
 
+        /* ── CONFIG MODAL ── */
         .config-form {
             display: flex;
             flex-direction: column;
@@ -609,6 +704,13 @@
             border-radius: 8px;
             font-size: 13px;
             width: 100%;
+            font-family: 'Inter', sans-serif;
+            transition: 0.15s;
+        }
+        .config-form input:focus {
+            border-color: #1a3a5c;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.12);
         }
         .config-form .form-row {
             display: flex;
@@ -621,7 +723,7 @@
             gap: 12px;
             margin-top: 12px;
             padding-top: 12px;
-            border-top: 1px solid #e8ecf1;
+            border-top: 1px solid #eef3f9;
         }
 
         @media (max-width: 1024px) {
@@ -638,7 +740,7 @@
                 grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             }
             .modal-content {
-                padding: 16px;
+                padding: 20px;
             }
         }
         @media (max-width: 768px) {
@@ -661,6 +763,13 @@
             .nested-bottom-grid {
                 grid-template-columns: 1fr;
             }
+            .modal-content {
+                padding: 16px;
+                max-height: 95vh;
+            }
+            .modal-room-card {
+                padding: 12px 14px;
+            }
             .modal-room-card .room-header {
                 flex-direction: column;
                 align-items: stretch;
@@ -674,19 +783,18 @@
             .modal-room-card .tube-table input[type="number"] {
                 width: 70px;
             }
+            .modal-room-card .room-header .name-input {
+                min-width: auto;
+            }
+            .dropdown-content {
+                right: -10px;
+                min-width: 180px;
+            }
             .card {
                 padding: 18px 16px 20px;
             }
             .chart-wrapper {
                 height: 250px;
-            }
-            .modal-content {
-                max-height: 95vh;
-                padding: 12px;
-            }
-            .dropdown-content {
-                right: -10px;
-                min-width: 180px;
             }
         }
         .chart-wrapper canvas {
@@ -791,7 +899,7 @@
                     <span class="pill">insights</span>
                 </div>
                 <div class="recommendation-box" id="recommendationBox">
-                    <!-- Management recommendations will be injected here -->
+                    <!-- Management recommendations -->
                     <div id="managementRecommendations"></div>
                     <!-- Technical section (hidden by default) -->
                     <div class="tech-section" id="techSection">
@@ -816,7 +924,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>✏️ Edit Room Data &amp; Tube History</h2>
-                <button class="modal-close" id="modalCloseBtn">&times;</button>
+                <button class="modal-close" id="modalCloseBtn">✕</button>
             </div>
             <div id="modalRoomCards" class="modal-room-cards"></div>
             <div class="modal-actions">
@@ -831,7 +939,7 @@
         <div class="modal-content" style="max-width:550px;">
             <div class="modal-header">
                 <h2>🔑 GitHub Token Settings</h2>
-                <button class="modal-close" id="configCloseBtn">&times;</button>
+                <button class="modal-close" id="configCloseBtn">✕</button>
             </div>
             <div class="config-form">
                 <div class="form-row">
@@ -1070,7 +1178,6 @@
                 const total = totalTubeCount(room);
                 const tubesHtml = room.tubes.map((t, i) => {
                     const isCurrent = i === room.tubes.length - 1 && t.replacementDate === '';
-                    const label = isCurrent ? 'Current' : `#${i+1}`;
                     const dateStr = t.replacementDate ? formatDate(t.replacementDate) : 'N/A';
                     return `<span class="tube-entry">
                         <span class="count">${fmt(t.tubeCount)}</span>
@@ -1082,7 +1189,7 @@
                 return `
                     <div class="tech-room-item">
                         <div class="tech-header">
-                            <span>${room.room} <span class="serial">#${room.serial}</span></span>
+                            <span>${room.room} <span class="serial">SN${room.serial}</span></span>
                             <span class="total">${fmt(total)}</span>
                         </div>
                         <div class="tech-tubes">${tubesHtml}</div>
@@ -1136,7 +1243,6 @@
         function renderRecommendations() {
             const managementHTML = renderManagementRecommendations();
             document.getElementById('managementRecommendations').innerHTML = managementHTML;
-            // Tech section is updated separately (renderTechDetails includes both details and recommendations text)
         }
 
         function renderKPIs() {
@@ -1200,12 +1306,10 @@
                 buildModal();
                 document.getElementById('editorModal').classList.add('active');
             } else if (action === 'tech') {
-                // Toggle technical section visibility and scroll to it
                 const techSection = document.getElementById('techSection');
                 const isVisible = techSection.classList.contains('visible');
                 if (!isVisible) {
                     techSection.classList.add('visible');
-                    // Scroll to the section
                     setTimeout(() => {
                         techSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 100);
@@ -1417,7 +1521,7 @@
                     <tr>
                       <td><input type="date" class="modal-tube-date" data-roomidx="${idx}" data-tubeidx="${tIdx}" value="${t.replacementDate}" /></td>
                       <td><input type="number" class="modal-tube-count" data-roomidx="${idx}" data-tubeidx="${tIdx}" value="${t.tubeCount}" step="1" min="0" /></td>
-                      <td><button class="modal-btn-remove" data-roomidx="${idx}" data-tubeidx="${tIdx}" title="Remove tube">✕</button></td>
+                      <td><button class="btn-remove" data-roomidx="${idx}" data-tubeidx="${tIdx}" title="Remove tube">✕</button></td>
                     </tr>
                   `).join('');
 
@@ -1425,7 +1529,10 @@
                   <div class="modal-room-card" data-roomidx="${idx}">
                     <div class="room-header">
                       <input class="name-input" data-roomidx="${idx}" value="${room.room}" placeholder="Room name" />
-                      <input class="serial-input" data-roomidx="${idx}" value="${room.serial}" placeholder="Serial" />
+                      <div class="serial-group">
+                        <span class="sn-label">SN</span>
+                        <input class="serial-input" data-roomidx="${idx}" value="${room.serial}" placeholder="Serial" />
+                      </div>
                       <div class="date-group">
                         <label>Install</label>
                         <input type="date" class="modal-install-date" data-roomidx="${idx}" value="${room.installDate}" />
@@ -1437,12 +1544,13 @@
                       <thead><tr><th>Replacement Date</th><th>Tube Count</th><th style="width:30px;"></th></tr></thead>
                       <tbody id="modal-tube-body-${idx}">${tubeRows}</tbody>
                     </table>
-                    <button class="modal-btn-add-tube" data-roomidx="${idx}">+ Add Tube</button>
+                    <button class="btn-add-tube" data-roomidx="${idx}">+ Add Tube</button>
                   </div>
                 `;
             }).join('');
 
-            document.querySelectorAll('.modal-btn-add-tube').forEach(btn => {
+            // Attach event listeners for dynamic buttons
+            document.querySelectorAll('.btn-add-tube').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const ridx = parseInt(this.dataset.roomidx);
                     data[ridx].tubes.push({ replacementDate: '', tubeCount: 0 });
@@ -1450,7 +1558,7 @@
                 });
             });
 
-            document.querySelectorAll('.modal-btn-remove').forEach(btn => {
+            document.querySelectorAll('.btn-remove').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const ridx = parseInt(this.dataset.roomidx);
                     const tidx = parseInt(this.dataset.tubeidx);
