@@ -6,7 +6,10 @@
       "installDate": "2018-01-01",
       "startDate": "2018-01-01",
       "tubes": [
-        { "replacementDate": "", "tubeCount": 69788 }
+        {
+          "replacementDate": "",
+          "tubeCount": 69788
+        }
       ]
     },
     {
@@ -15,7 +18,10 @@
       "installDate": "2018-01-01",
       "startDate": "2018-06-15",
       "tubes": [
-        { "replacementDate": "", "tubeCount": 53223 }
+        {
+          "replacementDate": "",
+          "tubeCount": 53223
+        }
       ]
     },
     {
@@ -24,7 +30,10 @@
       "installDate": "2018-01-01",
       "startDate": "2018-03-01",
       "tubes": [
-        { "replacementDate": "", "tubeCount": 50037 }
+        {
+          "replacementDate": "",
+          "tubeCount": 50037
+        }
       ]
     },
     {
@@ -33,7 +42,10 @@
       "installDate": "2018-01-01",
       "startDate": "2018-09-01",
       "tubes": [
-        { "replacementDate": "", "tubeCount": 43544 }
+        {
+          "replacementDate": "",
+          "tubeCount": 43544
+        }
       ]
     },
     {
@@ -42,7 +54,10 @@
       "installDate": "2018-01-01",
       "startDate": "2019-01-15",
       "tubes": [
-        { "replacementDate": "", "tubeCount": 32902 }
+        {
+          "replacementDate": "",
+          "tubeCount": 32902
+        }
       ]
     },
     {
@@ -51,8 +66,14 @@
       "installDate": "2018-01-01",
       "startDate": "2018-01-01",
       "tubes": [
-        { "replacementDate": "2025-11-03", "tubeCount": 186782 },
-        { "replacementDate": "", "tubeCount": 38614 }
+        {
+          "replacementDate": "2025-11-03",
+          "tubeCount": 186782
+        },
+        {
+          "replacementDate": "",
+          "tubeCount": 38614
+        }
       ]
     },
     {
@@ -61,9 +82,22 @@
       "installDate": "2018-01-01",
       "startDate": "2018-01-01",
       "tubes": [
-        { "replacementDate": "2023-11-13", "tubeCount": 158911 },
-        { "replacementDate": "2024-02-15", "tubeCount": 122182 },
-        { "replacementDate": "", "tubeCount": 77393 }
+        {
+          "replacementDate": "2023-11-13",
+          "tubeCount": 158911
+        },
+        {
+          "replacementDate": "2024-02-15",
+          "tubeCount": 122182
+        },
+        {
+          "replacementDate": "2025-11-03",
+          "tubeCount": 186782
+        },
+        {
+          "replacementDate": "",
+          "tubeCount": 77393
+        }
       ]
     },
     {
@@ -72,8 +106,14 @@
       "installDate": "2018-01-01",
       "startDate": "2018-01-01",
       "tubes": [
-        { "replacementDate": "2024-06-03", "tubeCount": 250000 },
-        { "replacementDate": "", "tubeCount": 165013 }
+        {
+          "replacementDate": "2024-06-03",
+          "tubeCount": 250000
+        },
+        {
+          "replacementDate": "",
+          "tubeCount": 165013
+        }
       ]
     }
   ]
