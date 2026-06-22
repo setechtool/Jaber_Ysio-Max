@@ -108,13 +108,6 @@
         .btn-reset:hover {
             background: #4b5e77;
         }
-        .btn-refresh {
-            background: #2a6b3a;
-            box-shadow: none;
-        }
-        .btn-refresh:hover {
-            background: #1e4d2a;
-        }
         .btn-save {
             background: #0b6e4f;
             box-shadow: none;
@@ -149,6 +142,13 @@
         }
         .btn-test:hover {
             background: #1a4a5a;
+        }
+        .btn-export {
+            background: #6a4a7a;
+            box-shadow: none;
+        }
+        .btn-export:hover {
+            background: #4a3a5a;
         }
 
         .kpi-grid {
@@ -626,11 +626,11 @@
             </div>
             <div class="header-right">
                 <div class="badge-date">📅 <span id="dateDisplay"></span></div>
-                <button class="btn btn-config" id="configBtn">⚙️ Configure GitHub</button>
+                <button class="btn btn-config" id="configBtn">🔑 Token Settings</button>
                 <button class="btn btn-load" id="loadBtn">📂 Load</button>
                 <button class="btn btn-save" id="saveBtn">💾 Save</button>
                 <button class="btn btn-edit" id="editBtn">✏️ Edit Data</button>
-                <button class="btn btn-refresh" id="refreshBtn">🔄 Reload Default</button>
+                <button class="btn btn-export" id="exportBtn">🖼️ Export PNG</button>
             </div>
         </header>
 
@@ -702,7 +702,7 @@
     <div class="modal-overlay" id="configModal">
         <div class="modal-content" style="max-width:550px;">
             <div class="modal-header">
-                <h2>⚙️ GitHub Configuration</h2>
+                <h2>🔑 GitHub Token Settings</h2>
                 <button class="modal-close" id="configCloseBtn">&times;</button>
             </div>
             <div class="config-form">
@@ -712,20 +712,20 @@
                     <span style="font-size:11px;color:#6b7f96;">Must have <strong>repo</strong> scope. Generate at GitHub → Settings → Developer settings → Personal access tokens.</span>
                 </div>
                 <div class="form-row">
-                    <label>Repository Owner (username or org)</label>
-                    <input type="text" id="repoOwner" placeholder="your-username" />
+                    <label>Repository Owner</label>
+                    <input type="text" id="repoOwner" value="setechtool" />
                 </div>
                 <div class="form-row">
                     <label>Repository Name</label>
-                    <input type="text" id="repoName" placeholder="your-repo" />
+                    <input type="text" id="repoName" value="Jaber_Ysio-Max" />
                 </div>
                 <div class="form-row">
-                    <label>Path to data.json (relative to repo root)</label>
-                    <input type="text" id="filePath" placeholder="data.json" value="data.json" />
+                    <label>Path to data.json</label>
+                    <input type="text" id="filePath" value="data.json" />
                 </div>
                 <div class="form-row">
-                    <label>Branch (leave as 'main' unless you use a different default)</label>
-                    <input type="text" id="branchName" placeholder="main" value="main" />
+                    <label>Branch</label>
+                    <input type="text" id="branchName" value="main" />
                 </div>
                 <div style="font-size:12px;color:#6b7f96;margin-top:4px;">
                     Your token is stored only in your browser (localStorage). It is never sent anywhere except to GitHub's API.
@@ -733,7 +733,7 @@
                 <div class="config-actions">
                     <button class="btn btn-test" id="testConnectionBtn">🔗 Test Connection</button>
                     <button class="btn btn-reset" id="configCancelBtn">Cancel</button>
-                    <button class="btn" id="configSaveBtn">💾 Save Configuration</button>
+                    <button class="btn" id="configSaveBtn">💾 Save</button>
                 </div>
             </div>
         </div>
@@ -932,17 +932,12 @@
             const totalExposure = sum(rooms.map(d => d.exposure));
             const busiest = rooms.reduce((a, b) => a.exposure > b.exposure ? a : b);
             const quietest = rooms.reduce((a, b) => a.exposure < b.exposure ? a : b);
-            const avgDailyAll = rooms.map(d => dailyAverage(d.exposure, d.startDate));
-            const overallAvg = sum(avgDailyAll) / avgDailyAll.length;
-            const maxDaily = Math.max(...avgDailyAll);
-            const minDaily = Math.min(...avgDailyAll);
 
             const rec = `
                 <strong>🔍 Key Observations</strong><br/>
                 • <strong>Total exposure</strong> across all rooms: <strong>${fmt(totalExposure)}</strong><br/>
                 • <strong>Busiest</strong> room: <strong>${busiest.room}</strong> (${fmt(busiest.exposure)} exposures)<br/>
                 • <strong>Quietest</strong> room: <strong>${quietest.room}</strong> (${fmt(quietest.exposure)} exposures)<br/>
-                • <strong>Average daily exposure</strong> per room: <strong>${fmt(Math.round(overallAvg))}</strong> (range: ${fmt(Math.round(minDaily))} – ${fmt(Math.round(maxDaily))})<br/>
                 <br/>
                 <strong>💡 Suggestions for Management Review</strong><br/>
                 • <strong>Patient distribution:</strong> The data indicates a notable difference in workload between the busiest and quietest rooms. Management may wish to review patient allocation strategies to promote balanced utilization and equitable staff workload across all rooms.<br/>
@@ -999,11 +994,11 @@
 
         function getGitHubConfig() {
             const token = localStorage.getItem('github_token');
-            const owner = localStorage.getItem('github_owner');
-            const repo = localStorage.getItem('github_repo');
+            const owner = localStorage.getItem('github_owner') || 'setechtool';
+            const repo = localStorage.getItem('github_repo') || 'Jaber_Ysio-Max';
             const path = localStorage.getItem('github_path') || 'data.json';
             const branch = localStorage.getItem('github_branch') || 'main';
-            if (!token || !owner || !repo) return null;
+            if (!token) return null;
             return { token, owner, repo, path, branch };
         }
 
@@ -1013,8 +1008,8 @@
 
         async function testGitHubConnection() {
             const config = getGitHubConfig();
-            if (!config) {
-                showToast('⚠️ Please configure GitHub first.');
+            if (!config || !config.token) {
+                showToast('⚠️ Please enter your GitHub token first.');
                 return false;
             }
             const { token, owner, repo, path, branch } = config;
@@ -1026,7 +1021,7 @@
                     const err = await resp.json();
                     throw new Error(err.message || 'Repository access denied');
                 }
-                showToast('✅ GitHub connection successful!');
+                showToast('✅ Connection successful!');
                 return true;
             } catch (error) {
                 showToast(`❌ Connection failed: ${error.message}`);
@@ -1036,8 +1031,8 @@
 
         async function commitToGitHub(content, filePath, commitMessage) {
             const config = getGitHubConfig();
-            if (!config) {
-                throw new Error('GitHub not configured. Please click "Configure GitHub" first.');
+            if (!config || !config.token) {
+                throw new Error('GitHub token not configured. Please click "Token Settings" and enter your token.');
             }
             const { token, owner, repo, path, branch } = config;
             const basePath = path.substring(0, path.lastIndexOf('/') + 1) || '';
@@ -1052,13 +1047,11 @@
                     const json = await resp.json();
                     sha = json.sha;
                 } else if (resp.status !== 404) {
-                    // Only ignore 404 (file doesn't exist)
                     const err = await resp.json();
                     throw new Error(`GitHub API error (GET): ${err.message || resp.statusText}`);
                 }
             } catch (e) {
                 if (e.message.includes('GET')) throw e;
-                // else ignore (file doesn't exist)
             }
 
             const payload = {
@@ -1081,11 +1074,12 @@
             if (!response.ok) {
                 const error = await response.json();
                 let msg = error.message || response.statusText;
-                // Provide clearer guidance for common errors
                 if (response.status === 403 && msg.includes('Resource not accessible')) {
                     msg = 'Token lacks write permission. Ensure your token has the "repo" scope.';
                 } else if (response.status === 404) {
                     msg = 'Repository or file path not found. Check owner, repo name, and file path.';
+                } else if (response.status === 401) {
+                    msg = 'Invalid token. Please regenerate your token and update it.';
                 }
                 throw new Error(`GitHub API error: ${msg}`);
             }
@@ -1098,8 +1092,9 @@
             const json = JSON.stringify({ rooms: data }, null, 2);
             const config = getGitHubConfig();
 
-            if (!config) {
-                showToast('⚠️ GitHub not configured. Downloading file instead.');
+            if (!config || !config.token) {
+                showToast('⚠️ Token not set. Please configure your GitHub token in Token Settings.');
+                // Still allow download
                 const now = new Date();
                 const timestamp = now.getFullYear() +
                     String(now.getMonth() + 1).padStart(2, '0') +
@@ -1271,20 +1266,20 @@
 
         function loadConfigToForm() {
             document.getElementById('githubToken').value = localStorage.getItem('github_token') || '';
-            document.getElementById('repoOwner').value = localStorage.getItem('github_owner') || '';
-            document.getElementById('repoName').value = localStorage.getItem('github_repo') || '';
+            document.getElementById('repoOwner').value = localStorage.getItem('github_owner') || 'setechtool';
+            document.getElementById('repoName').value = localStorage.getItem('github_repo') || 'Jaber_Ysio-Max';
             document.getElementById('filePath').value = localStorage.getItem('github_path') || 'data.json';
             document.getElementById('branchName').value = localStorage.getItem('github_branch') || 'main';
         }
 
         function saveConfigFromForm() {
             const token = document.getElementById('githubToken').value.trim();
-            const owner = document.getElementById('repoOwner').value.trim();
-            const repo = document.getElementById('repoName').value.trim();
+            const owner = document.getElementById('repoOwner').value.trim() || 'setechtool';
+            const repo = document.getElementById('repoName').value.trim() || 'Jaber_Ysio-Max';
             const path = document.getElementById('filePath').value.trim() || 'data.json';
             const branch = document.getElementById('branchName').value.trim() || 'main';
-            if (!token || !owner || !repo) {
-                showToast('⚠️ Please fill in all fields.');
+            if (!token) {
+                showToast('⚠️ Please enter your GitHub token.');
                 return;
             }
             localStorage.setItem('github_token', token);
@@ -1292,8 +1287,44 @@
             localStorage.setItem('github_repo', repo);
             localStorage.setItem('github_path', path);
             localStorage.setItem('github_branch', branch);
-            showToast('✅ Configuration saved.');
+            showToast('✅ Token saved.');
             document.getElementById('configModal').classList.remove('active');
+        }
+
+        // ─── EXPORT PNG ──────────────────────────────────────
+
+        function exportPNG() {
+            showToast('⏳ Capturing dashboard…');
+            if (typeof html2canvas === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+                script.onload = function() {
+                    captureDashboard();
+                };
+                document.head.appendChild(script);
+            } else {
+                captureDashboard();
+            }
+
+            function captureDashboard() {
+                const element = document.getElementById('dashboard');
+                html2canvas(element, {
+                    scale: 2,
+                    backgroundColor: '#f0f4f9',
+                    allowTaint: false,
+                    useCORS: true,
+                    logging: false,
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `YsioMax_Dashboard_${new Date().toISOString().slice(0,10)}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    showToast('✅ Dashboard captured!');
+                }).catch(err => {
+                    console.error(err);
+                    showToast('⚠️ Failed to capture dashboard.');
+                });
+            }
         }
 
         // ─── EVENT BINDINGS ─────────────────────────────────────
@@ -1310,13 +1341,6 @@
         });
 
         document.getElementById('saveBtn').addEventListener('click', saveData);
-
-        document.getElementById('refreshBtn').addEventListener('click', function() {
-            loadDefaultData().then(() => {
-                fullRefresh();
-                showToast('🔄 Reloaded default data');
-            });
-        });
 
         document.getElementById('editBtn').addEventListener('click', function() {
             buildModal();
@@ -1360,12 +1384,12 @@
 
         document.getElementById('testConnectionBtn').addEventListener('click', function() {
             const token = document.getElementById('githubToken').value.trim();
-            const owner = document.getElementById('repoOwner').value.trim();
-            const repo = document.getElementById('repoName').value.trim();
+            const owner = document.getElementById('repoOwner').value.trim() || 'setechtool';
+            const repo = document.getElementById('repoName').value.trim() || 'Jaber_Ysio-Max';
             const path = document.getElementById('filePath').value.trim() || 'data.json';
             const branch = document.getElementById('branchName').value.trim() || 'main';
-            if (!token || !owner || !repo) {
-                showToast('⚠️ Please fill in all fields.');
+            if (!token) {
+                showToast('⚠️ Please enter your token.');
                 return;
             }
             localStorage.setItem('github_token', token);
@@ -1375,6 +1399,8 @@
             localStorage.setItem('github_branch', branch);
             testGitHubConnection();
         });
+
+        document.getElementById('exportBtn').addEventListener('click', exportPNG);
 
         // ─── DATE DISPLAY ──────────────────────────────────────
 
