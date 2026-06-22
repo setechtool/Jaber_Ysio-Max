@@ -10,6 +10,8 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&display=swap" rel="stylesheet" />
     <style>
+        /* ... (same CSS as before, no changes) ... */
+        /* Include all styles from the previous version */
         * {
             margin: 0;
             padding: 0;
@@ -142,6 +144,13 @@
         }
         .btn-config:hover {
             background: #35455f;
+        }
+        .btn-test {
+            background: #2a6b7a;
+            box-shadow: none;
+        }
+        .btn-test:hover {
+            background: #1a4a5a;
         }
 
         .kpi-grid {
@@ -304,12 +313,10 @@
             color: #0b2a4a;
         }
 
-        /* Hidden file input */
         #fileInput {
             display: none;
         }
 
-        /* Modal overlay */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -490,7 +497,6 @@
             border-top: 1px solid #e8ecf1;
         }
 
-        /* Config modal */
         .config-form {
             display: flex;
             flex-direction: column;
@@ -512,6 +518,14 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+        }
+        .config-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e8ecf1;
         }
 
         @media (max-width: 1024px) {
@@ -601,10 +615,8 @@
 
     <div id="toast" class="toast-msg">✅ Dashboard updated</div>
 
-    <!-- Loading indicator -->
     <div id="loading" class="loading-overlay">⏳ Loading data…</div>
 
-    <!-- Main content -->
     <div id="dashboard" style="display:none;">
         <header class="dashboard-header">
             <div class="header-left">
@@ -654,7 +666,6 @@
                 </div>
             </div>
 
-            <!-- Right column: Recommendations -->
             <div class="card">
                 <div class="card-header">
                     <h3>💡 Recommendations</h3>
@@ -672,7 +683,6 @@
         </div>
     </div>
 
-    <!-- Hidden file input -->
     <input type="file" id="fileInput" accept=".json" />
 
     <!-- Editor Modal -->
@@ -692,7 +702,7 @@
 
     <!-- Config Modal -->
     <div class="modal-overlay" id="configModal">
-        <div class="modal-content" style="max-width:500px;">
+        <div class="modal-content" style="max-width:550px;">
             <div class="modal-header">
                 <h2>⚙️ GitHub Configuration</h2>
                 <button class="modal-close" id="configCloseBtn">&times;</button>
@@ -714,10 +724,15 @@
                     <label>Path to data.json (relative to repo root)</label>
                     <input type="text" id="filePath" placeholder="data.json" value="data.json" />
                 </div>
+                <div class="form-row">
+                    <label>Branch (leave as 'main' unless you use a different default)</label>
+                    <input type="text" id="branchName" placeholder="main" value="main" />
+                </div>
                 <div style="font-size:12px;color:#6b7f96;margin-top:4px;">
                     Your token is stored only in your browser (localStorage). It is never sent anywhere except to GitHub's API.
                 </div>
-                <div class="modal-actions" style="border-top:none;padding-top:0;">
+                <div class="config-actions">
+                    <button class="btn btn-test" id="testConnectionBtn">🔗 Test Connection</button>
                     <button class="btn btn-reset" id="configCancelBtn">Cancel</button>
                     <button class="btn" id="configSaveBtn">💾 Save Configuration</button>
                 </div>
@@ -727,7 +742,7 @@
 
     <script>
         // ─── GLOBAL STATE ──────────────────────────────────────────
-        let data = []; // current data array
+        let data = [];
 
         // ─── HELPERS ──────────────────────────────────────────────
         function fmt(n) { return n.toLocaleString(); }
@@ -748,9 +763,7 @@
             return exposure / days;
         }
 
-        function cloneData(d) { return JSON.parse(JSON.stringify(d)); }
-
-        // ─── LOAD DATA FROM DEFAULT (data.json) ──────────────────
+        // ─── LOAD DEFAULT DATA ──────────────────────────────────
         async function loadDefaultData() {
             try {
                 const response = await fetch('data.json?v=' + Date.now());
@@ -763,7 +776,6 @@
             } catch (error) {
                 console.error('Failed to load data.json:', error);
                 showToast('⚠️ Using fallback embedded data.');
-                // Fallback data
                 data = [
                     { room: 'Room 1', serial: '27164', installDate: '2018-01-01', startDate: '2018-01-01',
                         tubes: [{ replacementDate: '', tubeCount: 69788 }] },
@@ -790,7 +802,7 @@
             }
         }
 
-        // ─── CHART ────────────────────────────────────────────────
+        // ─── CHART ──────────────────────────────────────────────
         const ctx = document.getElementById('exposureChart').getContext('2d');
         let exposureChart = null;
 
@@ -886,7 +898,7 @@
             }
         }
 
-        // ─── RANKINGS ──────────────────────────────────────────────
+        // ─── RENDER FUNCTIONS ──────────────────────────────────
         function renderRanking() {
             const sorted = [...data].map(d => ({ ...d, exposure: totalTubeCount(d) }))
                 .sort((a, b) => b.exposure - a.exposure);
@@ -916,7 +928,6 @@
               `).join('');
         }
 
-        // ─── RECOMMENDATIONS ──────────────────────────────────────
         function renderRecommendations() {
             const rooms = data.map(d => ({ ...d, exposure: totalTubeCount(d) }));
             const totalExposure = sum(rooms.map(d => d.exposure));
@@ -942,7 +953,6 @@
             document.getElementById('recommendationBox').innerHTML = rec;
         }
 
-        // ─── KPI ──────────────────────────────────────────────────
         function renderKPIs() {
             const rooms = data.map(d => ({ ...d, exposure: totalTubeCount(d) }));
             const totalExposure = sum(rooms.map(d => d.exposure));
@@ -966,7 +976,6 @@
               `).join('');
         }
 
-        // ─── FULL REFRESH ──────────────────────────────────────────
         function fullRefresh() {
             document.getElementById('roomCount').textContent = data.length;
             renderKPIs();
@@ -976,7 +985,7 @@
             buildChart();
         }
 
-        // ─── TOAST ────────────────────────────────────────────────
+        // ─── TOAST ──────────────────────────────────────────────
         let toastTimer = null;
 
         function showToast(msg) {
@@ -987,15 +996,58 @@
             toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // ─── GITHUB API HELPERS ──────────────────────────────────
+        // ─── GITHUB API HELPERS ─────────────────────────────────
 
         function getGitHubConfig() {
             const token = localStorage.getItem('github_token');
             const owner = localStorage.getItem('github_owner');
             const repo = localStorage.getItem('github_repo');
             const path = localStorage.getItem('github_path') || 'data.json';
+            const branch = localStorage.getItem('github_branch') || 'main';
             if (!token || !owner || !repo) return null;
-            return { token, owner, repo, path };
+            return { token, owner, repo, path, branch };
+        }
+
+        // Robust base64 encoding for UTF-8
+        function utf8ToBase64(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+        }
+
+        async function getDefaultBranch(owner, repo, token) {
+            try {
+                const resp = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (!resp.ok) return null;
+                const json = await resp.json();
+                return json.default_branch || 'main';
+            } catch {
+                return 'main';
+            }
+        }
+
+        async function testGitHubConnection() {
+            const config = getGitHubConfig();
+            if (!config) {
+                showToast('⚠️ Please configure GitHub first.');
+                return false;
+            }
+            const { token, owner, repo, path, branch } = config;
+            try {
+                // Check if we can access the repo
+                const resp = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (!resp.ok) {
+                    const err = await resp.json();
+                    throw new Error(err.message || 'Repository access denied');
+                }
+                showToast('✅ GitHub connection successful!');
+                return true;
+            } catch (error) {
+                showToast(`❌ Connection failed: ${error.message}`);
+                return false;
+            }
         }
 
         async function commitToGitHub(content, filePath, commitMessage) {
@@ -1003,39 +1055,26 @@
             if (!config) {
                 throw new Error('GitHub not configured. Please click "Configure GitHub" first.');
             }
-            const { token, owner, repo, path } = config;
-            // If filePath is relative, we need to combine with base path
-            // We'll use the configured path for the main data.json, but for backup we'll use a timestamped name in the same directory.
-            // For simplicity, we'll always use the configured path for the main file.
-            // For backup, we'll generate a timestamped name in the same directory.
+            const { token, owner, repo, path, branch } = config;
             const basePath = path.substring(0, path.lastIndexOf('/') + 1) || '';
-            const mainFileName = path.substring(path.lastIndexOf('/') + 1);
+            const fullPath = basePath + filePath;
 
-            // Determine if we are updating the main file or a backup
-            const isBackup = (filePath !== mainFileName);
-            const fullPath = isBackup ? basePath + filePath : path;
-
-            // Get current file SHA if updating existing file
+            // Get SHA if file exists
             let sha = null;
-            if (!isBackup) {
-                try {
-                    const resp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${fullPath}`, {
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    if (resp.ok) {
-                        const json = await resp.json();
-                        sha = json.sha;
-                    }
-                } catch (e) { /* file doesn't exist, we'll create */ }
-            }
+            try {
+                const resp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${fullPath}`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                });
+                if (resp.ok) {
+                    const json = await resp.json();
+                    sha = json.sha;
+                }
+            } catch (e) { /* file doesn't exist */ }
 
             const payload = {
                 message: commitMessage,
-                content: btoa(unescape(encodeURIComponent(content))),
-                branch: 'main'
+                content: utf8ToBase64(content),
+                branch: branch
             };
             if (sha) payload.sha = sha;
 
@@ -1126,7 +1165,8 @@
             }
         }
 
-        // ─── LOAD FROM FILE ──────────────────────────────────────
+        // ─── LOAD FROM FILE ─────────────────────────────────────
+
         function loadDataFromFile(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -1144,7 +1184,7 @@
             reader.readAsText(file);
         }
 
-        // ─── MODAL EDITOR ──────────────────────────────────────────
+        // ─── MODAL EDITOR ──────────────────────────────────────
 
         function buildModal() {
             const container = document.getElementById('modalRoomCards');
@@ -1234,13 +1274,14 @@
             showToast('✅ Data updated successfully');
         }
 
-        // ─── CONFIG MODAL ──────────────────────────────────────────
+        // ─── CONFIG MODAL ──────────────────────────────────────
 
         function loadConfigToForm() {
             document.getElementById('githubToken').value = localStorage.getItem('github_token') || '';
             document.getElementById('repoOwner').value = localStorage.getItem('github_owner') || '';
             document.getElementById('repoName').value = localStorage.getItem('github_repo') || '';
             document.getElementById('filePath').value = localStorage.getItem('github_path') || 'data.json';
+            document.getElementById('branchName').value = localStorage.getItem('github_branch') || 'main';
         }
 
         function saveConfigFromForm() {
@@ -1248,6 +1289,7 @@
             const owner = document.getElementById('repoOwner').value.trim();
             const repo = document.getElementById('repoName').value.trim();
             const path = document.getElementById('filePath').value.trim() || 'data.json';
+            const branch = document.getElementById('branchName').value.trim() || 'main';
             if (!token || !owner || !repo) {
                 showToast('⚠️ Please fill in all fields.');
                 return;
@@ -1256,13 +1298,13 @@
             localStorage.setItem('github_owner', owner);
             localStorage.setItem('github_repo', repo);
             localStorage.setItem('github_path', path);
+            localStorage.setItem('github_branch', branch);
             showToast('✅ Configuration saved.');
             document.getElementById('configModal').classList.remove('active');
         }
 
-        // ─── EVENT BINDINGS ──────────────────────────────────────
+        // ─── EVENT BINDINGS ─────────────────────────────────────
 
-        // Load button triggers file picker
         document.getElementById('loadBtn').addEventListener('click', function() {
             document.getElementById('fileInput').click();
         });
@@ -1274,10 +1316,8 @@
             this.value = '';
         });
 
-        // Save button
         document.getElementById('saveBtn').addEventListener('click', saveData);
 
-        // Refresh default
         document.getElementById('refreshBtn').addEventListener('click', function() {
             loadDefaultData().then(() => {
                 fullRefresh();
@@ -1285,13 +1325,11 @@
             });
         });
 
-        // Edit button - show modal
         document.getElementById('editBtn').addEventListener('click', function() {
             buildModal();
             document.getElementById('editorModal').classList.add('active');
         });
 
-        // Modal close/cancel
         document.getElementById('modalCloseBtn').addEventListener('click', function() {
             document.getElementById('editorModal').classList.remove('active');
         });
@@ -1309,7 +1347,6 @@
             document.getElementById('editorModal').classList.remove('active');
         });
 
-        // Config button
         document.getElementById('configBtn').addEventListener('click', function() {
             loadConfigToForm();
             document.getElementById('configModal').classList.add('active');
@@ -1328,13 +1365,34 @@
         });
         document.getElementById('configSaveBtn').addEventListener('click', saveConfigFromForm);
 
-        // ─── DATE DISPLAY ──────────────────────────────────────────
+        document.getElementById('testConnectionBtn').addEventListener('click', function() {
+            // Save config first
+            const token = document.getElementById('githubToken').value.trim();
+            const owner = document.getElementById('repoOwner').value.trim();
+            const repo = document.getElementById('repoName').value.trim();
+            const path = document.getElementById('filePath').value.trim() || 'data.json';
+            const branch = document.getElementById('branchName').value.trim() || 'main';
+            if (!token || !owner || !repo) {
+                showToast('⚠️ Please fill in all fields.');
+                return;
+            }
+            localStorage.setItem('github_token', token);
+            localStorage.setItem('github_owner', owner);
+            localStorage.setItem('github_repo', repo);
+            localStorage.setItem('github_path', path);
+            localStorage.setItem('github_branch', branch);
+            testGitHubConnection();
+        });
+
+        // ─── DATE DISPLAY ──────────────────────────────────────
+
         document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric',
             month: 'short', day: 'numeric' });
         document.getElementById('footerDate').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric',
             month: 'short', day: 'numeric' });
 
-        // ─── INIT ──────────────────────────────────────────────────
+        // ─── INIT ──────────────────────────────────────────────
+
         async function init() {
             await loadDefaultData();
             document.getElementById('loading').style.display = 'none';
