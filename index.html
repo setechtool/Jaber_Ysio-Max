@@ -10,8 +10,6 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&display=swap" rel="stylesheet" />
     <style>
-        /* ... (same CSS as before, no changes) ... */
-        /* Include all styles from the previous version */
         * {
             margin: 0;
             padding: 0;
@@ -711,6 +709,7 @@
                 <div class="form-row">
                     <label>GitHub Token (with repo scope)</label>
                     <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" />
+                    <span style="font-size:11px;color:#6b7f96;">Must have <strong>repo</strong> scope. Generate at GitHub → Settings → Developer settings → Personal access tokens.</span>
                 </div>
                 <div class="form-row">
                     <label>Repository Owner (username or org)</label>
@@ -993,7 +992,7 @@
             toast.textContent = msg;
             toast.classList.add('show');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
         }
 
         // ─── GITHUB API HELPERS ─────────────────────────────────
@@ -1008,22 +1007,8 @@
             return { token, owner, repo, path, branch };
         }
 
-        // Robust base64 encoding for UTF-8
         function utf8ToBase64(str) {
             return btoa(unescape(encodeURIComponent(str)));
-        }
-
-        async function getDefaultBranch(owner, repo, token) {
-            try {
-                const resp = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-                });
-                if (!resp.ok) return null;
-                const json = await resp.json();
-                return json.default_branch || 'main';
-            } catch {
-                return 'main';
-            }
         }
 
         async function testGitHubConnection() {
@@ -1034,7 +1019,6 @@
             }
             const { token, owner, repo, path, branch } = config;
             try {
-                // Check if we can access the repo
                 const resp = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
                     headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
                 });
@@ -1059,7 +1043,6 @@
             const basePath = path.substring(0, path.lastIndexOf('/') + 1) || '';
             const fullPath = basePath + filePath;
 
-            // Get SHA if file exists
             let sha = null;
             try {
                 const resp = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${fullPath}`, {
@@ -1068,8 +1051,15 @@
                 if (resp.ok) {
                     const json = await resp.json();
                     sha = json.sha;
+                } else if (resp.status !== 404) {
+                    // Only ignore 404 (file doesn't exist)
+                    const err = await resp.json();
+                    throw new Error(`GitHub API error (GET): ${err.message || resp.statusText}`);
                 }
-            } catch (e) { /* file doesn't exist */ }
+            } catch (e) {
+                if (e.message.includes('GET')) throw e;
+                // else ignore (file doesn't exist)
+            }
 
             const payload = {
                 message: commitMessage,
@@ -1090,7 +1080,14 @@
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(`GitHub API error: ${error.message || response.statusText}`);
+                let msg = error.message || response.statusText;
+                // Provide clearer guidance for common errors
+                if (response.status === 403 && msg.includes('Resource not accessible')) {
+                    msg = 'Token lacks write permission. Ensure your token has the "repo" scope.';
+                } else if (response.status === 404) {
+                    msg = 'Repository or file path not found. Check owner, repo name, and file path.';
+                }
+                throw new Error(`GitHub API error: ${msg}`);
             }
             return await response.json();
         }
@@ -1102,7 +1099,6 @@
             const config = getGitHubConfig();
 
             if (!config) {
-                // Fallback: download file
                 showToast('⚠️ GitHub not configured. Downloading file instead.');
                 const now = new Date();
                 const timestamp = now.getFullYear() +
@@ -1125,12 +1121,10 @@
             }
 
             try {
-                // 1. Update data.json
                 const mainFileName = config.path.substring(config.path.lastIndexOf('/') + 1) || 'data.json';
                 await commitToGitHub(json, mainFileName, 'Update data.json via dashboard');
                 showToast('✅ data.json updated on GitHub');
 
-                // 2. Create timestamped backup
                 const now = new Date();
                 const timestamp = now.getFullYear() +
                     String(now.getMonth() + 1).padStart(2, '0') +
@@ -1144,7 +1138,6 @@
             } catch (error) {
                 console.error(error);
                 showToast(`❌ GitHub save failed: ${error.message}. Downloading file instead.`);
-                // Fallback download
                 const now = new Date();
                 const timestamp = now.getFullYear() +
                     String(now.getMonth() + 1).padStart(2, '0') +
@@ -1366,7 +1359,6 @@
         document.getElementById('configSaveBtn').addEventListener('click', saveConfigFromForm);
 
         document.getElementById('testConnectionBtn').addEventListener('click', function() {
-            // Save config first
             const token = document.getElementById('githubToken').value.trim();
             const owner = document.getElementById('repoOwner').value.trim();
             const repo = document.getElementById('repoName').value.trim();
